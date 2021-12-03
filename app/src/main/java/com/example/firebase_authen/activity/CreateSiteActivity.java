@@ -1,4 +1,4 @@
-package com.example.firebase_authen;
+package com.example.firebase_authen.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,8 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.firebase_authen.R;
+import com.example.firebase_authen.fragment.CreateSiteFragment;
 import com.example.firebase_authen.model.Site;
-import com.example.firebase_authen.model.User;
 import com.example.firebase_authen.model.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

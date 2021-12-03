@@ -1,22 +1,18 @@
-package com.example.firebase_authen;
+package com.example.firebase_authen.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.firebase_authen.R;
 import com.example.firebase_authen.model.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.firebase_authen.repository.UserRepository;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -67,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         user.setName(etRegEmail.getText().toString());
         user.setPassword(etRegPassword.getText().toString());
         user.setType(checkboxLeader.isChecked());
-        User.addUser(user, new User.addUserCallBack() {
+        UserRepository.addUser(user, new UserRepository.addUserCallBack() {
             @Override
             public void onCallBack(boolean isSuccess) {
                 if(isSuccess){

@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <fragment
         android:id="@+id/map_fragment1"
-        android:name="com.example.firebase_authen.MapsFragment"
+        android:name="com.example.firebase_authen.fragment.MapsFragment"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_weight="1" />

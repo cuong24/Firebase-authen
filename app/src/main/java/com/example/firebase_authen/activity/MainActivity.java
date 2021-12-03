@@ -1,34 +1,25 @@
-package com.example.firebase_authen;
+package com.example.firebase_authen.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArraySet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.example.firebase_authen.R;
+import com.example.firebase_authen.fragment.MapsFragment;
 import com.example.firebase_authen.model.Site;
-import com.example.firebase_authen.model.User;
 import com.example.firebase_authen.model.UserProfile;
 import com.example.firebase_authen.model.UserType;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
+import com.example.firebase_authen.repository.SiteRepository;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bindUI();
         addOnClick();
-        UserProfile.deleteInstance(); // This is to start fresh with new user
+//        UserProfile.deleteInstance(); // This is to start fresh with new user
         validateUser();
     }
 
@@ -99,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getAllSites() {
-        Site.getAllSites(new Site.getAllSitesCallBack() {
+        SiteRepository.getAllSites(new SiteRepository.getAllSitesCallBack() {
             @Override
             public void onCallBack(ArrayList<Site> sites) {
                 updateSpinner(sites);
@@ -109,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void filterSite() {
-        Site.getAllSites(new Site.getAllSitesCallBack() {
+        SiteRepository.getAllSites(new SiteRepository.getAllSitesCallBack() {
             @Override
             public void onCallBack(ArrayList<Site> sites){
                 map.refreshSites(sites);

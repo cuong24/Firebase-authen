@@ -1,4 +1,4 @@
-package com.example.firebase_authen;
+package com.example.firebase_authen.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.firebase_authen.activity.MainActivity;
+import com.example.firebase_authen.R;
+import com.example.firebase_authen.activity.SiteDetailActivity;
 import com.example.firebase_authen.model.Site;
-import com.example.firebase_authen.model.User;
 import com.example.firebase_authen.model.UserProfile;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

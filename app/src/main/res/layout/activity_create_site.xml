@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateSiteActivity">
+    tools:context=".activity.CreateSiteActivity">
 
     <fragment
         android:id="@+id/create_site_fragment"
-        android:name="com.example.firebase_authen.CreateSiteFragment"
+        android:name="com.example.firebase_authen.fragment.CreateSiteFragment"
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:layout_weight="1" />

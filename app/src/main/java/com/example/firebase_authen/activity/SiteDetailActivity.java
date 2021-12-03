@@ -1,28 +1,26 @@
-package com.example.firebase_authen;
+package com.example.firebase_authen.activity;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
+import com.example.firebase_authen.R;
+import com.example.firebase_authen.fragment.MapsFragment;
 import com.example.firebase_authen.model.Site;
-import com.example.firebase_authen.model.User;
 import com.example.firebase_authen.model.UserProfile;
 import com.example.firebase_authen.model.UserType;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.firebase_authen.repository.SiteRepository;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class SiteDetailActivity extends AppCompatActivity {
 
@@ -32,6 +30,25 @@ public class SiteDetailActivity extends AppCompatActivity {
     private Button closeSite, download, joinSite;
     private Site currentSite;
 
+    ActivityResultLauncher<Intent> closeSiteActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        currentSite.setNoOfPositiveCase((int) data.getExtras().get("noOfPositiveCase"));
+                        currentSite.setNoOfTest((int) data.getExtras().get("noOfTest"));
+                        currentSite.setClosed(true);
+                        SiteRepository.setSite(currentSite, new SiteRepository.getSiteCallBack() {
+                            @Override
+                            public void onCallBack(Site site) {
+                                finish();
+                            }
+                        });
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +71,7 @@ public class SiteDetailActivity extends AppCompatActivity {
         closeSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                closeSite();
             }
         });
         download.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +103,7 @@ public class SiteDetailActivity extends AppCompatActivity {
     }
 
     private void getSite(String siteID) {
-        Site.getSite(siteID, new Site.getSiteCallBack() {
+        SiteRepository.getSite(siteID, new SiteRepository.getSiteCallBack() {
             @Override
             public void onCallBack(Site site) {
                 currentSite = site;
@@ -100,7 +117,9 @@ public class SiteDetailActivity extends AppCompatActivity {
     }
 
     private void closeSite(){
-
+        Intent intent = new Intent(SiteDetailActivity.this,CloseSiteActivity.class);
+        intent.putExtra("siteID", currentSite.getSiteID());
+        closeSiteActivityResultLauncher.launch(intent);
     }
 
     private void download(){}
@@ -109,7 +128,7 @@ public class SiteDetailActivity extends AppCompatActivity {
         UserProfile user = UserProfile.getInstance(null);
         currentSite.getVolunteers().add(user.getUid());
         currentSite.setNoVolunteers(currentSite.getNoVolunteers() + 1);
-        Site.setSite(currentSite, new Site.getSiteCallBack() {
+        SiteRepository.setSite(currentSite, new SiteRepository.getSiteCallBack() {
             @Override
             public void onCallBack(Site site) {
                 Log.d(TAG, site.getSiteID());
