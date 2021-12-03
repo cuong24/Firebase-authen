@@ -39,12 +39,18 @@ public class SigninActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        bindUI();
+        addOnClick();
+    }
 
+    public void bindUI(){
         signinRegEmail = findViewById(R.id.signinRegEmail);
         signinRegPassword = findViewById(R.id.signinRegPassword);
         btnSignIn = findViewById(R.id.btnSignIn);
         tvRegisterHere = findViewById(R.id.tvRegisterHere);
+    }
 
+    public void addOnClick(){
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,7 +83,7 @@ public class SigninActivity extends AppCompatActivity {
                                 User user = new User();
                                 user.setName((String) document.get("name"));
                                 user.setPassword((String) document.get("password"));
-                                user.setType(document.get("type") == "LEADER");
+                                user.setType(document.get("type").equals("LEADER"));
                                 user.setUid(document.getId());
                                 UserProfile.getInstance(user);
                                 finish();

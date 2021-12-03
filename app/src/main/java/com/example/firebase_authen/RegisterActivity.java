@@ -34,13 +34,19 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        bindUI();
+        addOnClick();
+    }
 
+    public void bindUI(){
         etRegEmail = findViewById(R.id.etRegEmail);
         etRegPassword = findViewById(R.id.etRegPass);
         tvLoginHere = findViewById(R.id.tvLoginHere);
         checkboxLeader = findViewById(R.id.checkBoxIsLeader);
         btnRegister = findViewById(R.id.btnRegister);
+    }
 
+    public void addOnClick(){
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,23 +67,17 @@ public class RegisterActivity extends AppCompatActivity {
         user.setName(etRegEmail.getText().toString());
         user.setPassword(etRegPassword.getText().toString());
         user.setType(checkboxLeader.isChecked());
-        db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(RegisterActivity.this, "Create a new account", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, "Cannot create new user", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        User.addUser(user, new User.addUserCallBack() {
+            @Override
+            public void onCallBack(boolean isSuccess) {
+                if(isSuccess){
+                    Toast.makeText(RegisterActivity.this, "New user created", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Cannot create new user", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
 

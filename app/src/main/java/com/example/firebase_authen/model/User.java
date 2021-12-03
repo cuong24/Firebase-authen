@@ -5,11 +5,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.firebase_authen.RegisterActivity;
 import com.example.firebase_authen.SiteDetailActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -22,7 +24,7 @@ public class User {
     String password;
     UserType type;
     String uid;
-    FirebaseFirestore db;
+    private static FirebaseFirestore db;
 
     public User() {
         type = UserType.NORMAL;
@@ -62,7 +64,7 @@ public class User {
         return type;
     }
 
-    public User fetchUser(String userID){
+    public static User getUser(String userID, getUserCallBack userCallBack){
         db = FirebaseFirestore.getInstance();
         Query dbSites = db.collection("user");
         User user = new User();
@@ -74,8 +76,9 @@ public class User {
                         if (document.getId().equals(userID)) {
                             user.setName((String) document.get("name"));
                             user.setPassword((String) document.get("password"));
-                            user.setType(document.get("type") == "LEADER");
+                            user.setType(document.get("type").equals("LEADER"));
                             user.setUid(document.getId());
+                            userCallBack.onCallBack(user);
                         }
                     }
                 } else {
@@ -86,21 +89,30 @@ public class User {
         return user;
     }
 
-    public void setUser(User user){
+    public static void addUser(User user, addUserCallBack userCallBack){
         db = FirebaseFirestore.getInstance();
-        db.collection("user").document(user.getUid())
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        db.collection("users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("User", "Set user successfully");
+                    public void onSuccess(DocumentReference documentReference) {
+                        userCallBack.onCallBack(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("User", "Error writing document", e);
-                    }
+                        userCallBack.onCallBack(false);
+                        }
                 });
+    }
+
+    public interface getUserCallBack{
+        public void onCallBack(User user);
+    }
+
+    public interface addUserCallBack{
+        public void onCallBack(boolean isSuccess);
     }
 }

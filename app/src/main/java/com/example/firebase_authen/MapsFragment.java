@@ -11,10 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.firebase_authen.model.Site;
+import com.example.firebase_authen.model.User;
+import com.example.firebase_authen.model.UserProfile;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -47,9 +50,19 @@ public class MapsFragment extends Fragment {
         LatLng latLng;
         for (Site site : sites) {
             latLng = new LatLng(site.getLatitude(), site.getLongitude());
-            markers.add(
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(site.getSiteID()))
-            );
+            if (site.getLeaderID().equals(UserProfile.getInstance(null).getUid())){
+                markers.add(
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(site.getSiteID()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+                );
+            } else if (site.getVolunteers().contains(UserProfile.getInstance(null).getUid())) {
+                markers.add(
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(site.getSiteID()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)))
+                );
+            }else {
+                markers.add(
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(site.getSiteID()))
+                );
+            }
             if (getContext().getClass() == MainActivity.class) {
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
