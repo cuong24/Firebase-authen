@@ -3,13 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_login.xml" value="0.4338461538461538" />
+        <entry key="app/src/main/res/drawable/ic_unsplash_nwrohw4j3gg__1_.xml" value="0.4338461538461538" />
         <entry key="app/src/main/res/layout/activity_close_site.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/activity_create_site.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.234375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_notification.xml" value="0.22010869565217392" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.24427083333333333" />
         <entry key="app/src/main/res/layout/activity_signin.xml" value="0.24427083333333333" />
         <entry key="app/src/main/res/layout/activity_site_detail.xml" value="0.215625" />
+        <entry key="app/src/main/res/layout/activity_super_user.xml" value="0.2210144927536232" />
+        <entry key="app/src/main/res/layout/activity_view_notification.xml" value="0.22010869565217392" />
+        <entry key="app/src/main/res/layout/activity_view_record.xml" value="0.2328125" />
+        <entry key="app/src/main/res/layout/activity_view_site.xml" value="0.2210144927536232" />
         <entry key="app/src/main/res/layout/fragment_create_site.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.40989583333333335" />
         <entry key="app/src/main/res/layout/simple_list_item_1.xml" value="0.24320652173913043" />

@@ -1,13 +1,11 @@
 package com.example.firebase_authen.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.firebase_authen.R;
 
@@ -34,18 +32,8 @@ public class CloseSiteActivity extends AppCompatActivity {
     }
 
     public void addOnClick() {
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirm();
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancel();
-            }
-        });
+        confirmBtn.setOnClickListener(view -> confirm());
+        cancelBtn.setOnClickListener(view -> cancel());
     }
 
     public void confirm() {
@@ -56,7 +44,8 @@ public class CloseSiteActivity extends AppCompatActivity {
             setResult(RESULT_OK, intent);
             finish();
         } else {
-            Toast.makeText(CloseSiteActivity.this, "Please input all field", Toast.LENGTH_SHORT).show();
+            noOfPositiveCase.setError("Number of Positive case is required!");
+            noOfTest.setError("Number of test is required!");
         }
     }
 

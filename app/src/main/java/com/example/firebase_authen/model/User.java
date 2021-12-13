@@ -1,24 +1,10 @@
 package com.example.firebase_authen.model;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 public class User {
     private String name;
-    String password;
-    UserType type;
-    String uid;
+    private String password;
+    private UserType type;
+    private String uid;
 
     public User() {
         type = UserType.NORMAL;
@@ -40,9 +26,12 @@ public class User {
         this.password = password;
     }
 
-    public void setType(Boolean isLeader) {
+    public void setType(Boolean isLeader, Boolean isSuperUser) {
         if (isLeader) {
             this.type = UserType.LEADER;
+        }
+        if (isSuperUser) {
+            this.type = UserType.SUPER_USER;
         }
     }
 

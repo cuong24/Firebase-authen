@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">Firebase-authen</string>
+    <string name="channel_name">Firebase-authen</string>
+    <string name="channel_description">Firebase authentication description</string>
+    <string name="ivolunteer">iVolunteer</string>
+    <string name="sign_in">Login</string>
+    <string name="register_here">Register here</string>
+    <string name="create_new_account">Don\'t have an account?</string>
+    <string name="register">Register</string>
+    <string name="create_your_new_account">Create your new account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="are_you_a_leader">Are you a leader?</string>
+    <string name="login_here">Login here</string>
+    <string name="already_registered">Already registered?</string>
+    <string name="number_of_volunteer">Number of volunteer</string>
+    <string name="leader_id">Leader ID</string>
+    <string name="search">Search</string>
+    <string name="notification">Notification</string>
+    <string name="create_site">Create site</string>
+    <string name="download">Download</string>
+    <string name="close_site">Close Site</string>
+    <string name="join_site">Join Site</string>
+    <string name="volunteer_id">Volunteer ID</string>
+    <string name="volunteer_email">Volunteer Email</string>
+    <string name="positive_cases">Number of positive cases</string>
+    <string name="people_tested">Number of people tested</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="notifications">Notifications</string>
+    <string name="new_notification">New Notification</string>
+    <string name="read_notification">Read Notification</string>
+    <string name="log_out">Logout</string>
+    <string name="site_id">Site ID</string>
 </resources>

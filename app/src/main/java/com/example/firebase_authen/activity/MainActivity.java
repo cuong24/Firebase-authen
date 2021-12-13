@@ -1,7 +1,5 @@
 package com.example.firebase_authen.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArraySet;
@@ -11,12 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+
 import com.example.firebase_authen.R;
 import com.example.firebase_authen.fragment.MapsFragment;
 import com.example.firebase_authen.model.Site;
 import com.example.firebase_authen.model.UserProfile;
 import com.example.firebase_authen.model.UserType;
 import com.example.firebase_authen.repository.SiteRepository;
+import com.example.firebase_authen.service.NotificationService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -24,9 +26,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private MapsFragment map;
-    Button btnFilter, btnCreateSite, btnNotification;
+    Button btnFilter, btnCreateSite, btnNotification, logout;
     EditText numOfVolunteers;
     Spinner leaderIdSpinner;
+    private SearchView searchView;
 
     FirebaseFirestore db;
 
@@ -36,42 +39,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bindUI();
         addOnClick();
-//        UserProfile.deleteInstance(); // This is to start fresh with new user
-        validateUser();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         UserProfile user = UserProfile.getInstance(null);
-        if (UserProfile.getInstance(null) != null) {
+        validateUser();
+        if (user != null) {
             getAllSites();
             updateRole();
+            Intent intent = new Intent(MainActivity.this, NotificationService.class);
+            startService(intent);
         }
     }
 
-    private void bindUI(){
+    private void bindUI() {
+        logout = findViewById(R.id.logout);
         btnFilter = findViewById(R.id.filter);
         btnCreateSite = findViewById(R.id.createSite);
         btnNotification = findViewById(R.id.notification);
         numOfVolunteers = findViewById(R.id.numOfVolunteers);
         leaderIdSpinner = findViewById(R.id.leaderIdSpinner);
+        searchView = findViewById(R.id.idSearchView);
         map = (MapsFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment1);
     }
 
-    private void addOnClick(){
-        btnFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filterSite();
-            }
+    private void addOnClick() {
+        searchView.setOnQueryTextListener(MapsFragment.searchLocation(this, searchView, map));
+        logout.setOnClickListener(view -> {
+            logout();
         });
-        btnCreateSite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createSite();
-            }
+        btnFilter.setOnClickListener(view -> {
+            filterSite();
         });
+        btnCreateSite.setOnClickListener(view -> {
+            createSite();
+        });
+        btnNotification.setOnClickListener(view -> {
+            goToNotification();
+        });
+    }
+
+    private void logout() {
+        UserProfile.deleteInstance();
+        Intent intent = new Intent(MainActivity.this, SigninActivity.class);
+        startActivity(intent);
     }
 
     private void validateUser() {
@@ -82,30 +95,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateRole(){
+    private void updateRole() {
         UserProfile user = UserProfile.getInstance(null);
-        if (user.getType() == UserType.NORMAL){
-            btnCreateSite.setVisibility(View.INVISIBLE);
+        if (user.getType() == UserType.NORMAL) {
+            btnCreateSite.setVisibility(View.GONE);
+        }
+        if (user.getType() == UserType.SUPER_USER) {
+            Intent intent = new Intent(MainActivity.this, SuperUserActivity.class);
+            startActivity(intent);
         }
     }
 
     private void getAllSites() {
-        SiteRepository.getAllSites(new SiteRepository.getAllSitesCallBack() {
-            @Override
-            public void onCallBack(ArrayList<Site> sites) {
-                updateSpinner(sites);
-                map.refreshSites(sites);
-            }
-        });
+        SiteRepository.getAllSites(sites -> {
+            updateSpinner(sites);
+            map.refreshSites(sites);
+        }, false);
     }
 
     private void filterSite() {
-        SiteRepository.getAllSites(new SiteRepository.getAllSitesCallBack() {
-            @Override
-            public void onCallBack(ArrayList<Site> sites){
-                map.refreshSites(sites);
-            }
+        SiteRepository.getFilterSites(leaderIdSpinner.getSelectedItem().toString(), numOfVolunteers.getText().toString(), sites -> {
+            map.refreshSites(sites);
         });
+    }
+
+    private void goToNotification() {
+        Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+        startActivity(intent);
     }
 
     private void updateSpinner(ArrayList<Site> sites) {
@@ -117,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> leaderIdOptions = new ArrayList<>(leaderIDs);
         ArrayAdapter adp = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, leaderIdOptions);
         leaderIdSpinner.setAdapter(adp);
+        leaderIdSpinner.setSelection(0);
     }
 
     private void createSite() {

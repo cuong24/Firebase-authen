@@ -1,12 +1,13 @@
 package com.example.firebase_authen.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import com.example.firebase_authen.R;
 import com.example.firebase_authen.fragment.CreateSiteFragment;
@@ -23,6 +24,7 @@ public class CreateSiteActivity extends AppCompatActivity {
 
     private CreateSiteFragment createSiteFragment;
     Button btnCreateSite;
+    private SearchView searchView;
 
     FirebaseFirestore db;
 
@@ -32,6 +34,8 @@ public class CreateSiteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_site);
         createSiteFragment = (CreateSiteFragment) getSupportFragmentManager().findFragmentById(R.id.create_site_fragment);
         btnCreateSite = findViewById(R.id.createSite);
+        searchView = findViewById(R.id.idSearchView);
+        searchView.setOnQueryTextListener(CreateSiteFragment.searchLocation(this, searchView, createSiteFragment));
         btnCreateSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,25 +1,16 @@
 package com.example.firebase_authen.model;
 
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 
 public class Site {
-    Double longitude, latitude;
-    ArrayList<String> volunteers;
-    String leaderID, siteID;
-    Boolean closed;
-    int noOfPositiveCase, noOfTest, noVolunteers;
+    private Double longitude, latitude;
+    private ArrayList<String> volunteers;
+    private String leaderID, siteID;
+    private Boolean closed;
+    private int noOfPositiveCase, noOfTest, noVolunteers;
 
-    public Site(){}
+    public Site() {
+    }
 
     public Site(Double longitude, Double latitude, ArrayList<String> volunteers, String leaderID) {
         this.longitude = longitude;
@@ -101,6 +92,5 @@ public class Site {
     public void setNoOfTest(int noOfTest) {
         this.noOfTest = noOfTest;
     }
-
 
 }

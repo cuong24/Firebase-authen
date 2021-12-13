@@ -1,8 +1,5 @@
 package com.example.firebase_authen.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,15 +7,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.firebase_authen.R;
-import com.example.firebase_authen.model.User;
-import com.example.firebase_authen.model.UserProfile;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.firebase_authen.repository.UserRepository;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -27,8 +20,6 @@ public class SigninActivity extends AppCompatActivity {
     TextInputEditText signinRegPassword;
     TextView tvRegisterHere;
     Button btnSignIn;
-
-    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,33 +54,18 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     public void signin() {
-        db = FirebaseFirestore.getInstance();
-
-        db.collection("users")
-            .whereEqualTo("name", signinRegEmail.getText().toString())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.get("password").equals(signinRegPassword.getText().toString())) {
-                                Toast.makeText(SigninActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
-                                User user = new User();
-                                user.setName((String) document.get("name"));
-                                user.setPassword((String) document.get("password"));
-                                user.setType(document.get("type").equals("LEADER"));
-                                user.setUid(document.getId());
-                                UserProfile.getInstance(user);
-                                finish();
-                            } else {
-                                Toast.makeText(SigninActivity.this, "No account found", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    } else {
-                        Toast.makeText(SigninActivity.this, "Error signing in. Please check you internet", Toast.LENGTH_SHORT).show();
-                    }
+        UserRepository.validateUser(signinRegEmail.getText().toString(), signinRegPassword.getText().toString(), new UserRepository.validateUserCallBack() {
+            @Override
+            public void onCallBack(boolean isValidUser, boolean getAccounts) {
+                if (isValidUser && getAccounts) {
+                    Toast.makeText(SigninActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else if (getAccounts) {
+                    Toast.makeText(SigninActivity.this, "No account found", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SigninActivity.this, "Cannot get accounts. Check you internet!", Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+        });
     }
 }
